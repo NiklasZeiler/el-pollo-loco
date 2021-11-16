@@ -1,0 +1,71 @@
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: sandybrown;
+}
+
+canvas {
+    background-color: black;
+}
+
+.d-none {
+    display: none !important;
+}
+
+#startScreen {
+    width: 720px;
+    height: 470px;
+    background: url('img/9.Intro _ Outro Image/Start Screen/Opción2.png');
+    background-size: cover;
+    background-position: 60%;
+    background-repeat: no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.gameguide {
+    border: solid gray 1px;
+    width: 720px;
+    margin-top: 8px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.charakter-move {
+    font-family: 'Bree Serif', serif;
+    padding: 8px;
+}
+
+.start {
+    display: flex;
+}
+
+.btn-start {
+    border: none;
+    width: 60px;
+    font-family: 'Bree Serif', serif;
+    border-radius: 10px;
+    background-color: #f1c98d;
+    cursor: pointer;
+}
+
+.btn-newGame {
+    border: none;
+    width: 60px;
+    font-family: 'Bree Serif', serif;
+    border-radius: 10px;
+    background-color: #f1c98d;
+    cursor: pointer;
+}
+
+.fullscreen-btn {
+    border: none;
+    font-family: 'Bree Serif', serif;
+    border-radius: 10px;
+    background-color: #f1c98d;
+    cursor: pointer;
+    height: 20px;
+    margin-top: 8px;
+}

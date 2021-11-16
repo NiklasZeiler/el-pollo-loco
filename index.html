@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bree+Serif&display=swap" rel="stylesheet">
+    <title>El Pollo Loco</title>    
+    <script src="models/drawable-object.class.js"></script>
+    <script src="models/movable-object.class.js"></script>
+    <script src="models/character.class.js"></script>
+    <script src="models/chicken.class.js"></script>
+    <script src="models/cloud.class.js"></script>
+    <script src="models/status-bar.class.js"></script>
+    <script src="models/coin-bar.class.js"></script>
+    <script src="models/bottles.class.js"></script>
+    <script src="models/bottle-bar.class.js"></script>
+    <script src="models/world.class.js"></script>
+    <script src="models/status-bar-endboss.class.js"></script>
+    <script src="models/throwable-object.class.js"></script>
+    <script src="models/background-object.class.js"></script>
+    <script src="models/keyboard.class.js"></script>
+    <script src="models/level.class.js"></script>
+    <script src="models/endboss.class.js"></script>
+    <script src="models/coins.class.js"></script>
+    <script src="levels/level1.js"></script>
+    <script src="models/you-won.class.js"></script>
+    <script src="js/start-game.js"></script>
+    <script src="js/new-game.js"></script>
+    <script src="js/game.js"></script>
+</head>
+
+<body onload="startScreen()">
+    <h1>
+        El pollo loco
+    </h1>
+    <div id="startScreen"></div>
+    <div id="endScreen"></div>
+
+    <canvas class="d-none" id="canvas" width="720" height="480"></canvas>
+    <div class="gameguide">
+        <div class="charakter-move">
+            <span>Walk Left: A or &#8592</span>
+        </div>
+        <div class="charakter-move">
+            <span>Walk Right: D or &#8594</span>
+        </div>
+        <div class="charakter-move">
+            <span>Jump: Space</span>
+        </div>
+        <div class="charakter-move">
+            <span>Throw: E</span>
+        </div>
+        <div class="start">
+            <button id="StartButton" class="btn-start" onclick="startGame()">Start</button>
+            <button id="NewGameButton" class="btn-newGame d-none" onclick="newGame()">New Game</button>
+        </div>
+        
+    </div>
+    <div class="fullscreen">
+        <button onclick="fullScreen()" class="fullscreen-btn">Fullscreen</button>
+    </div>
+</body>
+
+</html>
