@@ -13,7 +13,7 @@ class Chicken extends MovableObject {
         'img/3.Secuencias_Enemy_básico/Versión_Gallinita (estas salen por orden de la gallina gigantona)/4.G_muerte.png'
     ]
 
-    clucking_chicken = new Audio('audio/chicken.mp3');
+    
 
 
     constructor() {
@@ -35,7 +35,7 @@ class Chicken extends MovableObject {
     animate() {
         this.moveChicken = setInterval(() => {//Alles was zwischen den Klammern steht wird 60 mal pro Sekunde ausgeführt
             this.moveLeft();
-            this.sound();
+            
         }, 1000 / 60);
         setInterval(() => {
             if (!this.isDead()) {
@@ -51,13 +51,4 @@ class Chicken extends MovableObject {
 
     }
 
-
-    /**
-     * play the sound from chicken
-     */
-    sound() {
-        this.clucking_chicken.play();
-        this.clucking_chicken.loop = true;
-        this.clucking_chicken.volume = 0.1;
-    }
 }

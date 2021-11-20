@@ -13,7 +13,10 @@ class World {
     gameOver = 0;
     winning_sound = new Audio('audio/win.mp3');
     game_finished = false;
+    game_lost = false;
     youWin = new YouWon();
+    youLost = new YouLost();
+    hurt_sound = new Audio('audio/hurt.mp3');
 
     constructor() {
         this.ctx = canvas.getContext('2d');
@@ -22,6 +25,7 @@ class World {
         this.setWorld();
         this.run();
         this.checkThrowObjects();
+
     }
 
 
@@ -33,19 +37,28 @@ class World {
     }
 
 
+
     /**
      * check functions with moves
      */
     run() {
         setInterval(() => {
             this.checkCollisions();
-        }, 1000 / 60);
+        }, 20);
     }
 
+
+    /**
+     * if endboss is dead we change the value in true
+     */
     finishLevel() {
         this.winning_sound.play();
         this.game_finished = true;
-        console.log(this.game_finished);
+    }
+
+
+    lostLevel() {
+        this.game_lost = true;
     }
 
 
@@ -88,21 +101,9 @@ class World {
         this.checkCollisionWithBottles();
         this.checkBottleCollisionWithEnemy();
         this.checkBottleCollisionWithBoss();
-        this.checkCollisionsWithEnemiesFromTop();
-        // this.checkCollisionWithCollectedItems(this.level.coins, this.character.coinBar);
-        // this.checkCollisionWithCollectedItems(this.level.bottles, this.character.bottleBar);
+        // this.checkCollisionsWithEnemiesFromTop();
     }
 
-
-    // checkCollisionWithCollectetItems(array, bar) {
-    //     array.forEach((element, index) => {
-    //         if (this.character.isColliding(element)) {
-    //             this.character.pickUpCoins();
-    //             array.splice(index, 1);
-    //             bar.setPercentage(this.character.element);
-    //         }
-    //     });
-    // }
 
 
     /**
@@ -134,33 +135,35 @@ class World {
 
 
     /**
-     * check collision with enemies
+     * check collision with enemies 
      */
     checkCollisionsWithEnemies() {
         this.level.enemies.forEach((enemy) => {
-            if (this.character.isColliding(enemy)) {
-                this.character.hit(3);
-                this.statusBar.setPercentage(this.character.energy);
-            }
-        }); if (this.character.isColliding(this.endboss)) {
-            this.character.hit(30);
-            this.statusBar.setPercentage(this.character.energy);
-        }
-    }
-
-
-    checkCollisionsWithEnemiesFromTop() {
-        this.level.enemies.forEach((enemy, index) => {
             if (!(this.character.isDead() || enemy.isDead()) && this.character.isColliding(enemy)) {
                 if (this.character.isStamping(enemy)) {
                     enemy.kill();
-                    console.log('collision');
-                    this.level.enemies.splice(index, 1);
-                }
+                    let position = this.level.enemies.indexOf(enemy);
+                    this.level.enemies.splice(position, 1);
+                } else {
+                    this.character.hit(3);
+                    this.hurt_sound.play();
+                    this.hurt_sound.volume = 0.2;
+                    console.log(this.character.energy);
+                    this.statusBar.setPercentage(this.character.energy);
 
+                }
+            } if (enemy instanceof Endboss) {
+                if (this.character.isColliding(this.endboss)) {
+                    this.character.hit(30);
+                    this.hurt_sound.play();
+                    this.hurt_sound.volume = 0.2;
+                    this.statusBar.setPercentage(this.character.energy);
+
+                }
             }
-        });
+        }, 2000);
     }
+
 
     /**
      * cheks if a bottle is colliding with boss and splash it
@@ -170,7 +173,6 @@ class World {
             let endboss = this.level.enemies[this.level.enemies.length - 1];
             if (endboss.isColliding(bottle) && !endboss.isHurt()) {
                 endboss.hit(20);
-                console.log('endboss' + endboss.energy);
                 this.statusBarEndboss.setPercentage(endboss.energy);
                 bottle.bottleIsCracked = true;
                 setTimeout(() => {
@@ -178,9 +180,11 @@ class World {
                     this.throwableObjects.splice(position, 1);
                 }, 200);
                 if (endboss.isDead() && this.gameOver == 0) {
-                    this.gameOver = new Date().getTime();
-                    this.finishLevel();
-                    console.log("win");
+                    setTimeout(() => {
+                        this.gameOver = new Date().getTime();
+                        this.finishLevel();
+                    }, 1000);
+
                 }
             }
         });
@@ -195,7 +199,6 @@ class World {
                 if (enemy instanceof Chicken) {
                     if (!enemy.isDead()) {
                         if (bottle.isColliding(enemy)) {
-                            console.log("Enemy hit");
                             enemy.kill();
                             bottle.bottleIsCracked = true;
                             this.deleteBottlesAndChicken(bottle, enemy);
@@ -206,7 +209,11 @@ class World {
         });
     }
 
-
+    /**
+     * delete the bottle and chicken from array and delete this from canvas
+     * @param {number} bottle - 
+     * @param {number} enemy 
+     */
     deleteBottlesAndChicken(bottle, enemy) {
         setTimeout(() => {
             let position = this.throwableObjects.indexOf(bottle);
@@ -240,6 +247,8 @@ class World {
         //---------Space for fixed setups end--------
         if (this.game_finished) {
             this.addToMap(this.youWin);
+        } else if (this.game_lost) {
+            this.addToMap(this.youLost);
         } else {
             this.ctx.translate(this.camera_x, 0);
             this.addObjectsToMap(this.level.coins);

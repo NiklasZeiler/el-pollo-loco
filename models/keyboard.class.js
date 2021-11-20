@@ -4,9 +4,6 @@ class Keyboard {
     SPACE = false;
     E = false;
 
-    // THROW_REQUEST_STOP = new Date().getTime();
-    // THROW_REQUEST_START = 0;
-
     constructor() {
         /**
          * check if keys are down
@@ -19,10 +16,6 @@ class Keyboard {
                 this.LEFT = true;
             }
             if (e.keyCode == 69) {// Taste E
-                // if (this.THROW_REQUEST_STOP > this.THROW_REQUEST_START && !this.E) {
-                //     this.THROW_REQUEST_START = new Date(), getTime();
-                //     this.E = true;
-                // }
                 this.E = true;
             }
             if (e.keyCode == 32) { // Leertaste

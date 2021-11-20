@@ -39,11 +39,13 @@ class ThrowableObject extends MovableObject {
      */
     throwBottle() {
         if(this.otherDirection) {
+            this.throw_sound.play();
             this.throwBottleLeft();
-            this.throw_sound.play();
+           
         } else {
-            this.throwBottleRight();
             this.throw_sound.play();
+            this.throwBottleRight();
+            
         }
     }
 
@@ -79,7 +81,9 @@ class ThrowableObject extends MovableObject {
     }
 
 
-
+    /**
+     * play bottle splash sound and images
+     */
     splashBottle() {
         clearInterval(this.gravitation);
         clearInterval(this.the_throw);        

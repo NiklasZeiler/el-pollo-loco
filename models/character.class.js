@@ -4,8 +4,8 @@ class Character extends MovableObject {
     y = 190;
     speed = 5;
     throwBottle = 0;
-    
-    // attacking = false;
+    idleTime;
+    lastIdle = new Date().getTime();
 
     IMAGES_WALKING = [
         'img/2.Secuencias_Personaje-Pepe-corrección/2.Secuencia_caminata/W-21.png',
@@ -45,9 +45,37 @@ class Character extends MovableObject {
         'img/2.Secuencias_Personaje-Pepe-corrección/4.Herido/H-43.png'
     ];
 
+    IMAGES_IDLE = [
+        'img/2.Secuencias_Personaje-Pepe-corrección/1.IDLE/IDLE/I-1.png',
+        'img/2.Secuencias_Personaje-Pepe-corrección/1.IDLE/IDLE/I-2.png',
+        'img/2.Secuencias_Personaje-Pepe-corrección/1.IDLE/IDLE/I-3.png',
+        'img/2.Secuencias_Personaje-Pepe-corrección/1.IDLE/IDLE/I-4.png',
+        'img/2.Secuencias_Personaje-Pepe-corrección/1.IDLE/IDLE/I-5.png',
+        'img/2.Secuencias_Personaje-Pepe-corrección/1.IDLE/IDLE/I-6.png',
+        'img/2.Secuencias_Personaje-Pepe-corrección/1.IDLE/IDLE/I-7.png',
+        'img/2.Secuencias_Personaje-Pepe-corrección/1.IDLE/IDLE/I-8.png',
+        'img/2.Secuencias_Personaje-Pepe-corrección/1.IDLE/IDLE/I-9.png',
+        'img/2.Secuencias_Personaje-Pepe-corrección/1.IDLE/IDLE/I-10.png'
+    ];
+
+    IMAGES_SLEEPING = [
+        'img/2.Secuencias_Personaje-Pepe-corrección/1.IDLE/LONG_IDLE/I-11.png',
+        'img/2.Secuencias_Personaje-Pepe-corrección/1.IDLE/LONG_IDLE/I-12.png',
+        'img/2.Secuencias_Personaje-Pepe-corrección/1.IDLE/LONG_IDLE/I-13.png',
+        'img/2.Secuencias_Personaje-Pepe-corrección/1.IDLE/LONG_IDLE/I-14.png',
+        'img/2.Secuencias_Personaje-Pepe-corrección/1.IDLE/LONG_IDLE/I-15.png',
+        'img/2.Secuencias_Personaje-Pepe-corrección/1.IDLE/LONG_IDLE/I-16.png',
+        'img/2.Secuencias_Personaje-Pepe-corrección/1.IDLE/LONG_IDLE/I-17.png',
+        'img/2.Secuencias_Personaje-Pepe-corrección/1.IDLE/LONG_IDLE/I-18.png',
+        'img/2.Secuencias_Personaje-Pepe-corrección/1.IDLE/LONG_IDLE/I-19.png',
+        'img/2.Secuencias_Personaje-Pepe-corrección/1.IDLE/LONG_IDLE/I-20.png'
+    ]
+
     world;
     walking_sound = new Audio('audio/running.mp3');
-    jumping_sound = new Audio('audio/jump.mp3');
+    jump_sound = new Audio('audio/jump.mp3');
+    
+
 
     constructor() {
         super().loadImage('img/2.Secuencias_Personaje-Pepe-corrección/2.Secuencia_caminata/W-21.png');// der Tag super() bedeutet das man auf eine Funktion in er Überklasse zugreift
@@ -55,22 +83,32 @@ class Character extends MovableObject {
         this.loadImages(this.IMAGES_JUMPING);
         this.loadImages(this.IMAGES_DEAD);
         this.loadImages(this.IMAGES_HURT);
+        this.loadImages(this.IMAGES_IDLE);
+        this.loadImages(this.IMAGES_SLEEPING);
         this.applyGravity();
         this.animate();
         this.moveDirection = 'right';
     }
 
+
+    animate() {
+        this.CharacterAnimate();
+        this.CharacterMove();
+    }
+
     /**
      * Animate the character 
      */
-    animate() {
+    CharacterAnimate() {
 
         setInterval(() => {
+            this.walking_sound.pause();
             if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
                 this.moveRight();
                 this.otherDirection = false;
                 this.moveDirection = 'right';
                 this.walking_sound.play();
+                this.walking_sound.volume = 0.3;
             }
 
             if (this.world.keyboard.LEFT && this.x > -300) {
@@ -78,33 +116,64 @@ class Character extends MovableObject {
                 this.otherDirection = true;
                 this.moveDirection = 'left';
                 this.walking_sound.play();
+                this.walking_sound.volume = 0.3;
+
             }
 
             if (this.world.keyboard.SPACE && !this.isAboveGround()) {
                 this.jump();
-                this.jumping_sound.play();
-                this.jumping_sound.volume = 0.2;
+                this.jump_sound.play();
+                this.jump_sound.volume = 0.2;
 
             }
             this.world.camera_x = -this.x + 100;
 
         }, 1000 / 60);
+    }
 
-
+    /**
+     * character movement
+     */
+    CharacterMove() {
         setInterval(() => {
-            if (this.isDead()) {
-                this.world.gameFinished = true;
+            if (this.isDead() && this.world.gameOver == 0) {
                 this.playAnimation(this.IMAGES_DEAD);
+                this.lastIdle = new Date().getTime();
+                setTimeout(() => {
+                    this.world.gameOver = new Date().getTime();
+                    this.world.lostLevel();
+                }, 400);
             } else if (this.isHurt()) {
+                this.lastIdle = new Date().getTime();
                 this.playAnimation(this.IMAGES_HURT);
+
+
             } else if (this.isAboveGround()) {
+                this.lastIdle = new Date().getTime();
                 this.playAnimation(this.IMAGES_JUMPING);
+
+            } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
+                this.lastIdle = new Date().getTime();
+                this.playAnimation(this.IMAGES_WALKING);
+
             } else {
-                if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
-                    this.playAnimation(this.IMAGES_WALKING);
-                }
+                this.noMoveFromCharacter();
             }
-        }, 50);
+        }, 100);
+    }
+
+
+
+    /**
+     * character is sleep after 3 seconds
+     */
+    noMoveFromCharacter() {
+        this.idleTime = new Date().getTime() - this.lastIdle;
+        if (this.idleTime > 3000) {
+            this.playAnimation(this.IMAGES_SLEEPING);
+        } else {
+            this.playAnimation(this.IMAGES_IDLE);
+        }
     }
 
 

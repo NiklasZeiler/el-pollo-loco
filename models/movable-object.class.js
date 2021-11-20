@@ -24,10 +24,6 @@ class MovableObject extends DrawableObject {
     }
 
 
-    // isCollidingFromTop(mo) {
-    //     return this.x && this.y + this.height + this.width == mo.x && mo.y + mo.width;
-    // }
-
 
     /**
      * if something is hit energy go down
@@ -48,7 +44,7 @@ class MovableObject extends DrawableObject {
     isHurt() {
         let timepassed = new Date().getTime() - this.lastHit;//Differenz in ms
         timepassed = timepassed / 1000; // Different in s
-        return timepassed < 0.5;
+        return timepassed < 1;
     }
 
     /**
@@ -129,8 +125,8 @@ class MovableObject extends DrawableObject {
     }
 
 
-    isStamping(enemy) {
-        return this.isLanding() && (this.getBottomPos() + 29) - enemy.getTopPos();
+    isStamping(mo) {
+        return this.isLanding() && (this.getBottomPos() + 29) - mo.getTopPos();
     }
 
 

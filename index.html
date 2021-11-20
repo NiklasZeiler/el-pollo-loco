@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Bree+Serif&display=swap" rel="stylesheet">
-    <title>El Pollo Loco</title>    
+    <title>El Pollo Loco</title>
     <script src="models/drawable-object.class.js"></script>
     <script src="models/movable-object.class.js"></script>
     <script src="models/character.class.js"></script>
@@ -29,6 +29,7 @@
     <script src="models/coins.class.js"></script>
     <script src="levels/level1.js"></script>
     <script src="models/you-won.class.js"></script>
+    <script src="models/you-lost.class.js"></script>
     <script src="js/start-game.js"></script>
     <script src="js/new-game.js"></script>
     <script src="js/game.js"></script>
@@ -38,7 +39,8 @@
     <h1>
         El pollo loco
     </h1>
-    <div id="startScreen"></div>
+
+    <div onclick="startGame()" id="startScreen"></div>
     <div id="endScreen"></div>
 
     <canvas class="d-none" id="canvas" width="720" height="480"></canvas>
@@ -59,11 +61,12 @@
             <button id="StartButton" class="btn-start" onclick="startGame()">Start</button>
             <button id="NewGameButton" class="btn-newGame d-none" onclick="newGame()">New Game</button>
         </div>
-        
+
     </div>
     <div class="fullscreen">
         <button onclick="fullScreen()" class="fullscreen-btn">Fullscreen</button>
     </div>
+
 </body>
 
 </html>

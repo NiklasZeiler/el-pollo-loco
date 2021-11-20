@@ -7,6 +7,7 @@ let world;
 function init() {
     level1 = getLevel1();
     world = new World();
+
 }
 
 
